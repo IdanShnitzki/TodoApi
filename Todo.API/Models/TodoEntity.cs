@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Todo.API.Models
 {
-    public class Todos
+    public class TodoEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,7 +17,7 @@ namespace Todo.API.Models
         public string Description { get; set; } = string.Empty;
         
         [Required]
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public DateTime? UpdatedDate { get; set; }
+        public string CreatedDate { get; set; } = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+        public string UpdatedDate { get; set; } = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
     }
 }

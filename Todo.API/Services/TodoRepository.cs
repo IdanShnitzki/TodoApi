@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Todo.API.Data;
+using Todo.API.Dtos;
 using Todo.API.Models;
 
 namespace Todo.API.Services
@@ -13,16 +14,29 @@ namespace Todo.API.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Todos> GetTodoAsync(int id)
+        public async Task<TodoEntity> GetTodoAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<IEnumerable<Todos>> GetTodosAsync()
+        public async Task<IEnumerable<TodoEntity>> GetTodosAsync()
         {
-            var todos = await _context.Todos.OrderBy(t => t.Id).ToListAsync();
+            return await _context.Todos.OrderBy(t => t.Id).ToListAsync();
+        }
 
-            return todos; 
+        public void CreateTodo(TodoEntity todo)
+        {
+            _context.Todos.Add(todo);
+        }
+
+        public bool SaveChanges()
+        {
+            return _context.SaveChanges() > 0;
+        }
+
+        public async  Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync() > 0);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Todo.API.Dtos;
+using Todo.API.Models;
 using Todo.API.Services;
 
 namespace Todo.API.Controllers
@@ -33,31 +34,21 @@ namespace Todo.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTodoById")]
-        public ActionResult<TodoReadDto> GetTodoById(int id)
+        public async Task<ActionResult<TodoReadDto>> GetTodoById(int id)
         {
             _logger.LogInformation("Start GetTodoById");
 
-            var todos = new List<TodoReadDto>
-            {
-                new TodoReadDto
-                {
-                    Id = 1,
-                    Title = "take out the dog",
-                    Description="do it at the evening",
-                },
-                new TodoReadDto
-                {
-                    Id = 2,
-                    Title = "take my girl swimming",
-                    Description = "talk to Inbal"
-                },
-            };
+            var todo = await _todoRepository.GetTodoAsync(id);
 
-            var todo = todos.Where(t => t.Id == id).FirstOrDefault();
+            if (todo == null)
+            {
+                _logger.LogInformation("GetTodoById not found");
+                return NotFound();
+            }
 
             _logger.LogInformation("End GetTodoById");
             
-            return Ok(todo);
+            return Ok(_mapper.Map<TodoReadDto>(todo));
         }
 
         [HttpPost]
@@ -65,17 +56,30 @@ namespace Todo.API.Controllers
         {
             _logger.LogInformation("Start CreateTodo");
 
+            var todoEntity = _mapper.Map<TodoEntity>(todoCreateDto);
+            _todoRepository.CreateTodo(todoEntity);
+            _todoRepository.SaveChanges();
 
-            var todo = new TodoCreateDto
-            {
-                Id = 3,
-                Title = todoCreateDto.Title,
-                Description = todoCreateDto.Description,
-            };
+            var todoReadDto = _mapper.Map<TodoReadDto>(todoEntity);
 
             _logger.LogInformation("End CreateTodo");
 
-            return CreatedAtRoute(nameof(GetTodoById), new { id = todo.Id }, todo);
+            return CreatedAtRoute(nameof(GetTodoById), new { id = todoReadDto.Id }, todoReadDto);
+        }
+
+        [HttpPut("{Id}")]
+        public async Task<ActionResult<TodoReadDto>> UpdateTodo(int id, TodoCreateDto todoCreateDto)
+        {
+            var todoEntity = await _todoRepository.GetTodoAsync(id);
+            if(todoEntity == null)
+                return NotFound();
+
+            todoEntity.UpdatedDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            _mapper.Map(todoCreateDto, todoEntity);
+            await _todoRepository.SaveChangesAsync();
+
+            var todoReadDto = _mapper.Map<TodoReadDto>(todoEntity);
+            return CreatedAtRoute(nameof(GetTodoById), new { id = todoReadDto.Id }, todoReadDto);
         }
     }
 }

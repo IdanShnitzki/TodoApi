@@ -10,6 +10,6 @@ namespace Todo.API.Data
             
         }
 
-        public DbSet<Todos> Todos { get; set; }
+        public DbSet<Models.TodoEntity> Todos { get; set; }
     }
 }

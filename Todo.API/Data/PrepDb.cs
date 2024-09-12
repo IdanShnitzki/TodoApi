@@ -21,25 +21,25 @@ namespace Todo.API.Data
 
                 todoContext.Todos.AddRange
                     (
-                        new Todos
+                        new TodoEntity
                         {
                             Id = 1,
                             Title = "take out the dog",
                             Description = "do it at the evening"
                         },
-                        new Todos
+                        new TodoEntity
                         {
                             Id = 2,
                             Title = "take my girl swimming",
                             Description = "talk to Inbal"
                         },
-                        new Todos
+                        new TodoEntity
                         {
                             Id = 3,
                             Title = "Go to Gym",
                             Description = ""
                         },
-                        new Todos
+                        new TodoEntity
                         {
                             Id = 4,
                             Title = "Talk to mom",

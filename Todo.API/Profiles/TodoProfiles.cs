@@ -8,7 +8,8 @@ namespace Todo.API.Profiles
     {
         public TodoProfiles()
         {
-            CreateMap<Todos, TodoReadDto>();
+            CreateMap<TodoEntity, TodoReadDto>();
+            CreateMap<TodoCreateDto, TodoEntity>();
         }
     }
 }
