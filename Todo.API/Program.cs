@@ -11,7 +11,11 @@ builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.ReturnHttpNotAcceptable = true;
+}).AddNewtonsoftJson()
+.AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddDbContext<TodoContext>(option => option.UseInMemoryDatabase("InMem"));
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();

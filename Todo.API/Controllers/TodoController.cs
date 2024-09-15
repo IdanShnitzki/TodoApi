@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Todo.API.Dtos;
 using Todo.API.Models;
@@ -57,7 +58,7 @@ namespace Todo.API.Controllers
             _logger.LogInformation("Start CreateTodo");
 
             var todoEntity = _mapper.Map<TodoEntity>(todoCreateDto);
-            _todoRepository.CreateTodo(todoEntity);
+            _todoRepository.Create(todoEntity);
             _todoRepository.SaveChanges();
 
             var todoReadDto = _mapper.Map<TodoReadDto>(todoEntity);
@@ -67,9 +68,11 @@ namespace Todo.API.Controllers
             return CreatedAtRoute(nameof(GetTodoById), new { id = todoReadDto.Id }, todoReadDto);
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<TodoReadDto>> UpdateTodo(int id, TodoCreateDto todoCreateDto)
         {
+            _logger.LogInformation("Start UpdateTodo");
+
             var todoEntity = await _todoRepository.GetTodoAsync(id);
             if(todoEntity == null)
                 return NotFound();
@@ -79,7 +82,60 @@ namespace Todo.API.Controllers
             await _todoRepository.SaveChangesAsync();
 
             var todoReadDto = _mapper.Map<TodoReadDto>(todoEntity);
+
+            _logger.LogInformation("End UpdateTodo");
+
             return CreatedAtRoute(nameof(GetTodoById), new { id = todoReadDto.Id }, todoReadDto);
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<TodoReadDto>> PartialUpdateTodo(int id, JsonPatchDocument<TodoCreateDto> patchDocument)
+        {
+            _logger.LogInformation("Start PartialUpdateTodo");
+
+            var todoEntity = await _todoRepository.GetTodoAsync(id);
+            if (todoEntity == null)
+                return NotFound();
+
+            var todoDtoToPatch = _mapper.Map<TodoCreateDto>(todoEntity);
+
+            patchDocument.ApplyTo(todoDtoToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(todoDtoToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            _mapper.Map(todoDtoToPatch, todoEntity);
+            await _todoRepository.SaveChangesAsync();
+
+            var todoReadDto = _mapper.Map<TodoReadDto>(todoEntity);
+
+            _logger.LogInformation("End PartialUpdateTodo");
+
+            return CreatedAtRoute(nameof(GetTodoById), new { id = todoEntity.Id }, todoEntity);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTodo(int id)
+        {
+            _logger.LogInformation("Start DeleteTodo");
+
+            var todoEntity = await _todoRepository.GetTodoAsync(id);
+            if (todoEntity == null)
+                return NotFound();
+
+            _todoRepository.Delete(todoEntity);
+            await _todoRepository.SaveChangesAsync();
+            
+            _logger.LogInformation("End DeleteTodo");
+
+            return NoContent();
         }
     }
 }

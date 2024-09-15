@@ -24,9 +24,14 @@ namespace Todo.API.Services
             return await _context.Todos.OrderBy(t => t.Id).ToListAsync();
         }
 
-        public void CreateTodo(TodoEntity todo)
+        public void Create(TodoEntity todoEntity)
         {
-            _context.Todos.Add(todo);
+            _context.Todos.Add(todoEntity);
+        }
+
+        public void Delete(TodoEntity todoEntity)
+        {
+            _context.Todos.Remove(todoEntity);
         }
 
         public bool SaveChanges()

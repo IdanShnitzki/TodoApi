@@ -7,7 +7,8 @@ namespace Todo.API.Services
     {
         Task<IEnumerable<TodoEntity>> GetTodosAsync();
         Task<TodoEntity> GetTodoAsync(int id);
-        void CreateTodo(TodoEntity todoCreateDto);
+        void Create(TodoEntity todoEntity);
+        void Delete(TodoEntity todoEntity);
         bool SaveChanges();
         Task<bool> SaveChangesAsync();
     }

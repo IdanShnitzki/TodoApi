@@ -9,6 +9,6 @@ namespace Todo.API.Dtos
         public string Title { get; set; }
 
         [MaxLength(200)]
-        public string Description { get; set; } 
+        public string? Description { get; set; } 
     }
 }

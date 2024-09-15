@@ -10,6 +10,7 @@ namespace Todo.API.Profiles
         {
             CreateMap<TodoEntity, TodoReadDto>();
             CreateMap<TodoCreateDto, TodoEntity>();
+            CreateMap<TodoEntity, TodoCreateDto>();
         }
     }
 }
