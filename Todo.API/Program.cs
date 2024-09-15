@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Todo.API.Data;
@@ -16,6 +17,15 @@ builder.Services.AddControllers(options =>
     options.ReturnHttpNotAcceptable = true;
 }).AddNewtonsoftJson()
 .AddXmlDataContractSerializerFormatters();
+
+
+//add extra information on when returning an error 
+builder.Services.AddProblemDetails(options =>
+    options.CustomizeProblemDetails = ctx =>
+        ctx.ProblemDetails.Extensions.Add("MachineName", Environment.MachineName));
+
+builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
 
 builder.Services.AddDbContext<TodoContext>(option => option.UseInMemoryDatabase("InMem"));
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
