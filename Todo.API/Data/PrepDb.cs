@@ -25,7 +25,7 @@ namespace Todo.API.Data
                         {
                             Id = 1,
                             Title = "take out the dog",
-                            Description = "do it at the evening"
+                            Description = "do it in the evening"
                         },
                         new TodoEntity
                         {
@@ -36,7 +36,7 @@ namespace Todo.API.Data
                         new TodoEntity
                         {
                             Id = 3,
-                            Title = "Go to Gym",
+                            Title = "Go to the gym",
                             Description = ""
                         },
                         new TodoEntity
@@ -44,6 +44,25 @@ namespace Todo.API.Data
                             Id = 4,
                             Title = "Talk to mom",
                             Description = null
+                        },
+                        new TodoEntity
+                        {
+                            Id = 5,
+                            Title = "Eat well",
+                            Description = "salad and fish"
+                        },
+                        new TodoEntity
+                        {
+                            Id = 6,
+                            Title = "Friends night out",
+                            Description = "Rafael and Ziv"
+
+                        },
+                        new TodoEntity
+                        {
+                            Id = 7,
+                            Title = "Buy Groceries",
+                            Description = "Fruits and vegetables"
                         }
                     );
 

@@ -26,6 +26,7 @@ builder.Services.AddProblemDetails(options =>
         ctx.ProblemDetails.Extensions.Add("MachineName", Environment.MachineName));
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddTransient<PaginationMetadata>();
 
 
 builder.Services.AddDbContext<TodoContext>(option => option.UseInMemoryDatabase("InMem"));

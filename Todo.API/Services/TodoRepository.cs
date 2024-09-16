@@ -9,13 +9,15 @@ namespace Todo.API.Services
     public class TodoRepository : ITodoRepository
     {
         private readonly TodoContext _context;
+        private readonly PaginationMetadata _paginationMetadata;
 
-        public TodoRepository(TodoContext context)
+        public TodoRepository(TodoContext context, PaginationMetadata paginationMetadata)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _paginationMetadata = paginationMetadata ?? throw new ArgumentNullException(nameof(paginationMetadata));
         }
 
-        public async Task<IEnumerable<TodoEntity>> GetTodosAsync(string? title, string? searchQuery)
+        public async Task<(IEnumerable<TodoEntity>, PaginationMetadata)> GetTodosAsync(string? title, string? searchQuery, int requestedPage, int pageSize)
         {
             var collection = _context.Todos as IQueryable<TodoEntity>;
 
@@ -31,7 +33,17 @@ namespace Todo.API.Services
                              (!string.IsNullOrEmpty(t.Description) && t.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)));
             }
 
-            return await collection.OrderBy(t => t.Id).ToListAsync();
+            _paginationMetadata.TotalItemCount = await collection.CountAsync();
+            _paginationMetadata.PageSize = pageSize;
+            _paginationMetadata.CurrentPage = requestedPage;
+            _paginationMetadata.TotalPageCount = (int)Math.Ceiling((_paginationMetadata.TotalItemCount / (double)pageSize));
+
+            var collectionToReturn = await collection.OrderBy(t => t.Id)
+                .Skip(pageSize * (requestedPage - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, _paginationMetadata);
         }
 
         public async Task<TodoEntity> GetTodoAsync(int id)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using Todo.API.Dtos;
 using Todo.API.Models;
 using Todo.API.Services;
@@ -14,6 +15,7 @@ namespace Todo.API.Controllers
         private readonly ITodoRepository _todoRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<TodoController> _logger;
+        private readonly PaginationMetadata _paginationMetadata;
 
         public TodoController(ITodoRepository todoRepository, IMapper mapper, ILogger<TodoController> logger)
         {
@@ -23,11 +25,13 @@ namespace Todo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoReadDto>>> GetTodos(string? title, string? searchQuery)
+        public async Task<ActionResult<IEnumerable<TodoReadDto>>> GetTodos(string? title, string? searchQuery, int requestedPage = 1, int pageSize = 2)
         {
             _logger.LogInformation("Start Getting Todos");
 
-            var todos = await _todoRepository.GetTodosAsync(title, searchQuery);
+            var (todos, paginationMetadata) = await _todoRepository.GetTodosAsync(title, searchQuery, requestedPage, pageSize);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata)); 
 
             _logger.LogInformation("End Getting Todos");
 
