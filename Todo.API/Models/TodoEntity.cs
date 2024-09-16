@@ -14,7 +14,7 @@ namespace Todo.API.Models
         public string Title { get; set; }
 
         [MaxLength(200)]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
         
         [Required]
         public string CreatedDate { get; set; } = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");

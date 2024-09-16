@@ -43,7 +43,7 @@ namespace Todo.API.Data
                         {
                             Id = 4,
                             Title = "Talk to mom",
-                            Description = ""
+                            Description = null
                         }
                     );
 

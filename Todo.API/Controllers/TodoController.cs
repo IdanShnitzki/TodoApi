@@ -23,11 +23,11 @@ namespace Todo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoReadDto>>> GetTodos()
+        public async Task<ActionResult<IEnumerable<TodoReadDto>>> GetTodos(string? title, string? searchQuery)
         {
             _logger.LogInformation("Start Getting Todos");
 
-            var todos = await _todoRepository.GetTodosAsync();
+            var todos = await _todoRepository.GetTodosAsync(title, searchQuery);
 
             _logger.LogInformation("End Getting Todos");
 
