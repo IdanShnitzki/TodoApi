@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
                         .MinimumLevel.Debug()
-                        .WriteTo.Console());
+                        .WriteTo.Console()
+                        .WriteTo.File("logs/TodoLog.log", rollingInterval: Serilog.RollingInterval.Day));
 
 // Add services to the container.
 
@@ -19,7 +20,7 @@ builder.Services.AddControllers(options =>
 .AddXmlDataContractSerializerFormatters();
 
 
-//add extra information on when returning an error 
+//add options.CustomizeProblemDetails to add extra information on when returning an error 
 builder.Services.AddProblemDetails(options =>
     options.CustomizeProblemDetails = ctx =>
         ctx.ProblemDetails.Extensions.Add("MachineName", Environment.MachineName));
