@@ -19,9 +19,9 @@ namespace Todo.API.Controllers
         {
             // look up the actual file, depending on the fileId...
             // demo code
-            const string folderName = "Files";
-            const string fileName = "getting-started-with-rest-slides.pdf";
-            var pathToFile = Path.Combine(Directory.GetCurrentDirectory(), folderName, fileName) ;
+            var folderPath = "Files";
+            var fileName = "getting-started-with-rest-slides.pdf";
+            var pathToFile = Path.Combine(Directory.GetCurrentDirectory(), folderPath, fileName) ;
 
 
             if (!System.IO.File.Exists(pathToFile))
@@ -38,6 +38,36 @@ namespace Todo.API.Controllers
 
             var bytes = System.IO.File.ReadAllBytes(pathToFile);
             return File(bytes, contentType, pathToFile);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveFile(IFormFile file)
+        {
+            // Validate the input. Put a limit on filesize to avoid large uploads attacks. 
+            if (file.Length == 0 || file.Length > 20971520) 
+            {
+                return BadRequest("File size is not supported, please upload file of size up to 20mb");
+            }
+
+            if (file.ContentType != "application/pdf")
+            {
+                return BadRequest("File type is not supported");
+            }
+
+            // This is only for local environmental purposes
+            // On production environment files should be stored on an external location than the application with no Execute privileges
+            // Avoid using file.FileName, as an attacker can provide a
+            // malicious one, including full paths or relative paths.  
+            var folderPath = "Files";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), folderPath, $"uploaded_file_{Guid.NewGuid()}.pdf");
+
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok("Your file has been uploaded successfully.");
         }
     }
 }
