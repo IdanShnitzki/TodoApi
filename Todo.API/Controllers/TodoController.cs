@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -8,8 +9,9 @@ using Todo.API.Services;
 
 namespace Todo.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1)]
     public class TodoController : ControllerBase
     {
         private readonly ITodoRepository _todoRepository;
@@ -39,6 +41,7 @@ namespace Todo.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTodoById")]
+        [ApiVersion(0.1, Deprecated = true)]
         public async Task<ActionResult<TodoReadDto>> GetTodoById(int id)
         {
             _logger.LogInformation("Start GetTodoById");
