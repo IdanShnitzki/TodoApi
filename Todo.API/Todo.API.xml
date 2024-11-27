@@ -25,6 +25,7 @@
             </summary>
             <param name="id"></param>
             <returns></returns>
+            <response code="200">Returns the request todo</response>
         </member>
         <member name="M:Todo.API.Controllers.TodoController.CreateTodo(Todo.API.Dtos.TodoCreateDto)">
             <summary>

@@ -55,8 +55,11 @@ namespace Todo.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <response code="200">Returns the request todo</response>
         [HttpGet("{id}", Name = "GetTodoById")]
         [ApiVersion(0.1, Deprecated = true)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TodoReadDto>> GetTodoById(int id)
         {
             _logger.LogInformation("Start GetTodoById");
@@ -80,6 +83,7 @@ namespace Todo.API.Controllers
         /// <param name="todoCreateDto"></param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<TodoReadDto> CreateTodo(TodoCreateDto todoCreateDto)
         {
             _logger.LogInformation("Start CreateTodo");
@@ -102,6 +106,8 @@ namespace Todo.API.Controllers
         /// <param name="todoCreateDto"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TodoReadDto>> UpdateTodo(int id, TodoCreateDto todoCreateDto)
         {
             _logger.LogInformation("Start UpdateTodo");
@@ -128,6 +134,9 @@ namespace Todo.API.Controllers
         /// <param name="patchDocument"></param>
         /// <returns></returns>
         [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TodoReadDto>> PartialUpdateTodo(int id, JsonPatchDocument<TodoCreateDto> patchDocument)
         {
             _logger.LogInformation("Start PartialUpdateTodo");
@@ -165,8 +174,9 @@ namespace Todo.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteTodo(int id)
         {
             _logger.LogInformation("Start DeleteTodo");
