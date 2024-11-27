@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Todo.API</name>
+    </assembly>
+    <members>
+        <member name="M:Todo.API.Controllers.FilesController.GetFiles(System.String)">
+            <summary>
+            Get File by id
+            </summary>
+            <param name="fileId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Todo.API.Controllers.FilesController.SaveFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Save file
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Todo.API.Controllers.TodoController.GetTodos(System.String,System.String,System.Int32,System.Int32)" -->
+        <member name="M:Todo.API.Controllers.TodoController.GetTodoById(System.Int32)">
+            <summary>
+            Get Todo By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Todo.API.Controllers.TodoController.CreateTodo(Todo.API.Dtos.TodoCreateDto)">
+            <summary>
+            Create a Todo
+            </summary>
+            <param name="todoCreateDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Todo.API.Controllers.TodoController.UpdateTodo(System.Int32,Todo.API.Dtos.TodoCreateDto)">
+            <summary>
+            update a todo
+            </summary>
+            <param name="id"></param>
+            <param name="todoCreateDto"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Todo.API.Controllers.TodoController.PartialUpdateTodo(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Todo.API.Dtos.TodoCreateDto})" -->
+        <member name="M:Todo.API.Controllers.TodoController.DeleteTodo(System.Int32)">
+            <summary>
+            Delete todo
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

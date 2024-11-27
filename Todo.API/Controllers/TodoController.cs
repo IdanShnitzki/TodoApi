@@ -28,6 +28,14 @@ namespace Todo.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// Get all Todos , searchQuery & paging is optional
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="searchQuery"></param>
+        /// <param name="requestedPage"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoReadDto>>> GetTodos(string? title, string? searchQuery, int requestedPage = 1, int pageSize = 2)
         {
@@ -42,6 +50,11 @@ namespace Todo.API.Controllers
             return Ok(_mapper.Map<IEnumerable<TodoReadDto>>(todos));
         }
 
+        /// <summary>
+        /// Get Todo By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "GetTodoById")]
         [ApiVersion(0.1, Deprecated = true)]
         public async Task<ActionResult<TodoReadDto>> GetTodoById(int id)
@@ -61,6 +74,11 @@ namespace Todo.API.Controllers
             return Ok(_mapper.Map<TodoReadDto>(todo));
         }
 
+        /// <summary>
+        /// Create a Todo
+        /// </summary>
+        /// <param name="todoCreateDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult<TodoReadDto> CreateTodo(TodoCreateDto todoCreateDto)
         {
@@ -77,6 +95,12 @@ namespace Todo.API.Controllers
             return CreatedAtRoute(nameof(GetTodoById), new { id = todoReadDto.Id }, todoReadDto);
         }
 
+        /// <summary>
+        /// update a todo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="todoCreateDto"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<ActionResult<TodoReadDto>> UpdateTodo(int id, TodoCreateDto todoCreateDto)
         {
@@ -97,6 +121,12 @@ namespace Todo.API.Controllers
             return CreatedAtRoute(nameof(GetTodoById), new { id = todoReadDto.Id }, todoReadDto);
         }
 
+        /// <summary>
+        /// partial update with JsonPatchDocument<TodoCreateDto>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="patchDocument"></param>
+        /// <returns></returns>
         [HttpPatch("{id}")]
         public async Task<ActionResult<TodoReadDto>> PartialUpdateTodo(int id, JsonPatchDocument<TodoCreateDto> patchDocument)
         {
@@ -129,6 +159,12 @@ namespace Todo.API.Controllers
 
             return CreatedAtRoute(nameof(GetTodoById), new { id = todoEntity.Id }, todoEntity);
         }
+
+        /// <summary>
+        /// Delete todo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTodo(int id)

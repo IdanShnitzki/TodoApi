@@ -18,6 +18,11 @@ namespace Todo.API.Controllers
             _fileExtensionContentTypeProvider = fileExtensionContentTypeProvider;
         }
 
+        /// <summary>
+        /// Get File by id
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
         [HttpGet("{fileId}")]
         public IActionResult GetFiles(string fileId)
         {
@@ -44,6 +49,11 @@ namespace Todo.API.Controllers
             return File(bytes, contentType, pathToFile);
         }
 
+        /// <summary>
+        /// Save file
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> SaveFile(IFormFile file)
         {
