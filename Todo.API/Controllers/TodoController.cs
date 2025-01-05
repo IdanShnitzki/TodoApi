@@ -29,7 +29,7 @@ namespace Todo.API.Controllers
         }
 
         /// <summary>
-        /// Get all Todos , searchQuery & paging is optional
+        /// Get all Todos , searchQuery and paging are optional
         /// </summary>
         /// <param name="title"></param>
         /// <param name="searchQuery"></param>
@@ -128,7 +128,7 @@ namespace Todo.API.Controllers
         }
 
         /// <summary>
-        /// partial update with JsonPatchDocument<TodoCreateDto>
+        /// partial update with JsonPatchDocument
         /// </summary>
         /// <param name="id"></param>
         /// <param name="patchDocument"></param>
