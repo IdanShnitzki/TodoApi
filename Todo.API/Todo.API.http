@@ -1,6 +1,27 @@
 @Todo.API_HostAddress = http://localhost:5001
 
-GET {{Todo.API_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{Todo.API_HostAddress}}/api/v1/authentication/authenticate
+Content-Type: application/json
+
+{
+    "username": "idan",
+    "password": "shnitzki"
+}
 
 ###
+
+GET {{Todo.API_HostAddress}}/api/v1/Todo?requestedPage=1&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZ2l2ZW5fbmFtZSI6IkpvaG4iLCJmYW1pbHlfbmFtZSI6IldpY2siLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3MzYwODM4NDYsImV4cCI6MTczNjA4NzQ0NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzIxMCIsImF1ZCI6InRvZG9hcGkifQ.6RhTa_jMcxvhA80xOOIsADrVl60rPT2A16XWP9qr6e0
+Accept: application/json
+Content-Type: application/json
+
+
+###
+POST {{Todo.API_HostAddress}}/api/v1/Todo
+Accept: application/json
+Content-Type: applicat ion/json
+
+{
+    "title": "Task was created with http test",
+    "description": "Description for the Task was created with http test"
+}
