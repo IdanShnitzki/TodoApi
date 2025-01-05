@@ -3,6 +3,7 @@ using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using Todo.API.Data;
@@ -71,6 +72,23 @@ builder.Services.AddSwaggerGen(setupAction =>
     var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
 
     setupAction.IncludeXmlComments(xmlCommentsFullPath);
+
+    setupAction.AddSecurityDefinition("TodoApiBearerAuth", new() { Type = SecuritySchemeType.Http, Scheme = "Bearer", Description = "Input a valid token to access this API" });
+
+    setupAction.AddSecurityRequirement(new ()
+    {
+        {
+            new ()
+            {
+                Reference = new OpenApiReference 
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "TodoApiBearerAuth" 
+                }                
+            },
+            new List<string>()
+        }
+    });
 });
 
 builder.Services.AddAuthentication("Bearer")
@@ -86,8 +104,6 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
         };
     });
-
-
 
 var app = builder.Build();
 
