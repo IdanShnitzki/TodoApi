@@ -1,6 +1,10 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +35,13 @@ if (environment == Environments.Development)
 }
 else
 {
+    var secretClient = new SecretClient(
+        new Uri("https://tododotnetkeyvalut.vault.azure.net/"),
+        new DefaultAzureCredential());
+
+    builder.Configuration.AddAzureKeyVault(secretClient,
+        new KeyVaultSecretManager());
+
     builder.Host.UseSerilog(
         (context, loggerConfiguration) => loggerConfiguration
             .MinimumLevel.Debug()
