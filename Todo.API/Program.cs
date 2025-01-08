@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,36 @@ using System.Reflection;
 using Todo.API.Data;
 using Todo.API.Services;
 
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("logs/Todolog.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
-                        .MinimumLevel.Debug()
-                        .WriteTo.Console()
-                        .WriteTo.File("logs/TodoLog.log", rollingInterval: Serilog.RollingInterval.Day));
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+if (environment == Environments.Development)
+{
+    builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
+                            .MinimumLevel.Debug()
+                            .WriteTo.Console()
+                            .WriteTo.File("logs/ToodLogDevelopment.log", rollingInterval: RollingInterval.Day));
+}
+else
+{
+    builder.Host.UseSerilog(
+        (context, loggerConfiguration) => loggerConfiguration
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .WriteTo.File("logs/TodoLog.log", rollingInterval: Serilog.RollingInterval.Day)
+            .WriteTo.ApplicationInsights(new TelemetryConfiguration
+            {
+                InstrumentationKey = builder.Configuration["ApplicationInsightsInstrumentationKey"]
+            }, TelemetryConverter.Traces));
+}
+
 
 // Add services to the container.
 
@@ -115,11 +140,16 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler();
+}
+
 app.UseForwardedHeaders();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI(setupAction =>
     {
@@ -131,7 +161,7 @@ if (app.Environment.IsDevelopment())
                 description.GroupName.ToUpperInvariant());
         }
     });
-}
+//}
 
 app.UseHttpsRedirection();
 
